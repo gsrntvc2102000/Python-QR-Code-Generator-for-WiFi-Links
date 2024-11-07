@@ -1,7 +1,7 @@
 import qrcode
 
 # Function to generate WiFi QR code
-def generate_wifi_qr(ssid, password, encryption):
+def generate_wifi_qr(ssid, password, encryption, filename='wifi_qr.png'):
     wifi_string = f"WIFI:S:{ssid};T:{encryption};P:{password};;"
     qr = qrcode.QRCode(
         version=1,
@@ -12,10 +12,11 @@ def generate_wifi_qr(ssid, password, encryption):
     qr.add_data(wifi_string)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    img.save('wifi_qr.png')
+    img.save(filename)
+    print(f"WiFi QR code generated and saved as {filename}")
 
 # Function to generate a QR code for a URL
-def generate_link_qr(link):
+def generate_link_qr(link, filename='link_qr.png'):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -25,7 +26,8 @@ def generate_link_qr(link):
     qr.add_data(link)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    img.save('link_qr.png')
+    img.save(filename)
+    print(f"Link QR code generated and saved as {filename}")
 
 # Main function to provide a menu and input interface
 def main():
@@ -40,14 +42,19 @@ def main():
         ssid = input("Enter the WiFi network SSID: ")
         password = input("Enter the WiFi network password: ")
         encryption = input("Enter the WiFi network encryption type (WPA/WEP/etc.): ")
-        generate_wifi_qr(ssid, password, encryption)
-        print("WiFi QR code generated and saved as wifi_qr.png")
+        filename = input("Enter the desired filename for the QR code image (default: wifi_qr.png): ")
+        filename = filename if filename else 'wifi_qr.png'
+        generate_wifi_qr(ssid, password, encryption, filename)
+        
     elif choice == "2":
         link = input("Enter the link (URL): ")
-        generate_link_qr(link)
-        print("Link QR code generated and saved as link_qr.png")
+        filename = input("Enter the desired filename for the QR code image (default: link_qr.png): ")
+        filename = filename if filename else 'link_qr.png'
+        generate_link_qr(link, filename)
+        
     else:
         print("Invalid choice. Please try again.")
+        main()  # Retry if input is invalid
 
 # Ensure the script runs when executed
 if __name__ == "__main__":
